@@ -26,7 +26,7 @@ mongoose.connection.once( 'open', () => {
 //     res.send(`Testing testing`)
 // })
 
-// index route should be first
+// read route should be first
 // anytime youre going to database have to do capital model/schema, followed by verb
 app.get( '/', async ( req, res ) => {
     try {
@@ -46,7 +46,7 @@ app.post( '/', async ( req, res ) => {
 
     try {
        const post = await Post.create( req.body )
-       res.send( post )
+       res.send( post ) // this will have _id from database
     } catch (error) {
         console.error( error )
         // res.status(500).json( { error: error.message } )
@@ -55,7 +55,22 @@ app.post( '/', async ( req, res ) => {
     // TESTING
         // - headers content-type application/json
         // - body json { }
+})
 
+// UPDATE ROUTE
+app.put( '/:id', async ( req, res ) => {
+
+    let { id } = req.params
+
+    try {
+        const post = await Post.findByIdAndUpdate( id, req.body, {
+            new: true // this returns updated post and not pre-updated
+        } ) // id will come from req
+        res.send( post )
+    } catch (error) {
+        console.error(error)
+        res.status(500).send( "Server error" )
+    }
 })
 
 app.listen( PORT, ( req, res ) => {
