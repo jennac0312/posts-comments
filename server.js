@@ -22,12 +22,14 @@ mongoose.connection.once( 'open', () => {
 })
 
 // ROUTES 
-// app.get( '/', ( req, res ) => {
-//     res.send(`Testing testing`)
-// })
+// routes go most to least specific ( INDUCES method - shoutout Dylan)
 
-// read route should be first
-// anytime youre going to database have to do capital model/schema, followed by verb
+// app.get( '/', ( req, res ) => {
+    //     res.send(`Testing testing`)
+    // })
+
+    // read route should be first
+    // anytime youre going to database have to do capital model/schema, followed by verb
 app.get( '/', async ( req, res ) => {
     try {
         const allPosts = await Post.find( {} ) // creating a variable to poulate with all entities of the Post type
@@ -53,9 +55,26 @@ app.post( '/', async ( req, res ) => {
     }
 
     // TESTING
-        // - headers content-type application/json
-        // - body json { }
+    // - headers content-type application/json
+    // - body json { }
 })
+
+// delete should go above update
+app.delete( '/:id', async ( req, res ) => {
+
+    let { id } = req.params
+
+    try {
+        await Post.findByIdAndDelete( id )
+        res.send( 'Post has been deleted' ) // just so we know it ran
+    } catch (error) {
+        res.status(500).send( "Server error" )
+    }
+
+
+
+})
+
 
 // UPDATE ROUTE
 app.put( '/:id', async ( req, res ) => {
@@ -63,6 +82,7 @@ app.put( '/:id', async ( req, res ) => {
     let { id } = req.params
 
     try {
+        // ( what's being updated, what it's being updated to, { rules to follow on return }  )
         const post = await Post.findByIdAndUpdate( id, req.body, {
             new: true // this returns updated post and not pre-updated
         } ) // id will come from req
@@ -72,6 +92,7 @@ app.put( '/:id', async ( req, res ) => {
         res.status(500).send( "Server error" )
     }
 })
+
 
 app.listen( PORT, ( req, res ) => {
     console.log(`Server is running on PORT ${PORT}`)
