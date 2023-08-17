@@ -20,6 +20,10 @@ app.get( '/', ( req, res ) => {
     res.send(`Testing testing`)
 })
 
+// C -> create. need to first make a model schema
+app.post( '/', ( req, res ) => {
+
+})
 
 app.listen( PORT, ( req, res ) => {
     console.log(`Server is running on PORT ${PORT}`)
